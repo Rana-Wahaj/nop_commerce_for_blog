@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
+
 
 namespace Nop.Data;
 
@@ -246,7 +246,6 @@ public partial interface IRepository<TEntity> where TEntity : BaseEntity
     /// <param name="resetIdentity">Performs reset identity column</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task TruncateAsync(bool resetIdentity = false);
-    Task DeleteAsync(CategoryWahaj category);
 
     #endregion
 
