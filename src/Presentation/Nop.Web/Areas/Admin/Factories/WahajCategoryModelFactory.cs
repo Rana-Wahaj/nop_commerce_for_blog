@@ -76,7 +76,7 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
     /// <param name="searchModel">Category product search model</param>
     /// <param name="category">Category</param>
     /// <returns>Category product search model</returns>
-    protected virtual CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel searchModel, CategoryWahaj category)
+    protected virtual WahajCategoryProductSearchModel PrepareCategoryProductSearchModel(WahajCategoryProductSearchModel searchModel, CategoryWahaj category)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -102,7 +102,7 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the category search model
     /// </returns>
-    public virtual async Task<CategorySearchModel> PrepareCategorySearchModelAsync(CategorySearchModel searchModel)
+    public virtual async Task<WahajCategorySearchModel> PrepareCategorySearchModelAsync(WahajCategorySearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -142,7 +142,7 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the category list model
     /// </returns>
-    public virtual async Task<CategoryListModel> PrepareCategoryListModelAsync(CategorySearchModel searchModel)
+    public virtual async Task<WahajCategoryListModel> PrepareCategoryListModelAsync(WahajCategorySearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
         //get categories
@@ -153,12 +153,12 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
             overridePublished: searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1));
 
         //prepare grid model
-        var model = await new CategoryListModel().PrepareToGridAsync(searchModel, categories, () =>
+        var model = await new WahajCategoryListModel().PrepareToGridAsync(searchModel, categories, () =>
         {
             return categories.SelectAwait(async category =>
             {
                 //fill in model values from the entity
-                var categoryModel = category.ToModel<CategoryModel>();
+                var categoryModel = category.ToModel<WahajCategoryModel>();
 
                 //fill in additional values (not existing in the entity)
                 categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumbAsync(category);
@@ -181,16 +181,16 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the category model
     /// </returns>
-    public virtual async Task<CategoryModel> PrepareCategoryModelAsync(CategoryModel model, CategoryWahaj category, bool excludeProperties = false)
+    public virtual async Task<WahajCategoryModel> PrepareCategoryModelAsync(WahajCategoryModel model, CategoryWahaj category, bool excludeProperties = false)
     {
-        Func<CategoryLocalizedModel, int, Task> localizedModelConfiguration = null;
+        Func<WahajCategoryLocalizedModel, int, Task> localizedModelConfiguration = null;
 
         if (category != null)
         {
             //fill in model values from the entity
             if (model == null)
             {
-                model = category.ToModel<CategoryModel>();
+                model = category.ToModel<WahajCategoryModel>();
                 model.SeName = await _urlRecordService.GetSeNameAsync(category, 0, true, false);
             }
 
@@ -258,7 +258,7 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the category product list model
     /// </returns>
-    public virtual async Task<CategoryProductListModel> PrepareCategoryProductListModelAsync(CategoryProductSearchModel searchModel, CategoryWahaj category)
+    public virtual async Task<WahajCategoryProductListModel> PrepareCategoryProductListModelAsync(WahajCategoryProductSearchModel searchModel, CategoryWahaj category)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -270,12 +270,12 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
         //prepare grid model
-        var model = await new CategoryProductListModel().PrepareToGridAsync(searchModel, productCategories, () =>
+        var model = await new WahajCategoryProductListModel().PrepareToGridAsync(searchModel, productCategories, () =>
         {
             return productCategories.SelectAwait(async productCategory =>
             {
                 //fill in model values from the entity
-                var categoryProductModel = productCategory.ToModel<CategoryProductModel>();
+                var categoryProductModel = productCategory.ToModel<WahajCategoryProductModel>();
 
                 //fill in additional values (not existing in the entity)
                 categoryProductModel.ProductName = (await _productService.GetProductByIdAsync(productCategory.ProductId))?.Name;
@@ -295,7 +295,7 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the product search model to add to the category
     /// </returns>
-    public virtual async Task<AddProductToCategorySearchModel> PrepareAddProductToCategorySearchModelAsync(AddProductToCategorySearchModel searchModel)
+    public virtual async Task<AddProductToWahajCategorySearchModel> PrepareAddProductToCategorySearchModelAsync(AddProductToWahajCategorySearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -328,7 +328,7 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the product list model to add to the category
     /// </returns>
-    public virtual async Task<AddProductToCategoryListModel> PrepareAddProductToCategoryListModelAsync(AddProductToCategorySearchModel searchModel)
+    public virtual async Task<AddProductToWahajCategoryListModel> PrepareAddProductToCategoryListModelAsync(AddProductToWahajCategorySearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -343,7 +343,7 @@ public partial class WahajCategoryModelFactory : IWahajCategoryModelFactory
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
         //prepare grid model
-        var model = await new AddProductToCategoryListModel().PrepareToGridAsync(searchModel, products, () =>
+        var model = await new AddProductToWahajCategoryListModel().PrepareToGridAsync(searchModel, products, () =>
         {
             return products.SelectAwait(async product =>
             {

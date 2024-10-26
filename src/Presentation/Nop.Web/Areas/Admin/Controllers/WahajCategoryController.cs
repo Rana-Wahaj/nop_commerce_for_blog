@@ -97,7 +97,7 @@ public partial class WahajCategoryController : BaseAdminController
 
     #region Utilities
 
-    protected virtual async Task UpdateLocalesAsync(CategoryWahaj category, CategoryModel model)
+    protected virtual async Task UpdateLocalesAsync(CategoryWahaj category, WahajCategoryModel model)
     {
         foreach (var localized in model.Locales)
         {
@@ -139,7 +139,7 @@ public partial class WahajCategoryController : BaseAdminController
             await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(category.Name));
     }
 
-    protected virtual async Task SaveCategoryAclAsync(CategoryWahaj category, CategoryModel model)
+    protected virtual async Task SaveCategoryAclAsync(CategoryWahaj category, WahajCategoryModel model)
     {
         category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
         await _categoryService.UpdateCategoryAsync(category);
@@ -164,7 +164,7 @@ public partial class WahajCategoryController : BaseAdminController
         }
     }
 
-    protected virtual async Task SaveStoreMappingsAsync(CategoryWahaj category, CategoryModel model)
+    protected virtual async Task SaveStoreMappingsAsync(CategoryWahaj category, WahajCategoryModel model)
     {
         category.LimitedToStores = model.SelectedStoreIds.Any();
         await _categoryService.UpdateCategoryAsync(category);
@@ -204,13 +204,13 @@ public partial class WahajCategoryController : BaseAdminController
             return AccessDeniedView();
 
         //prepare model
-        var model = await _categoryModelFactory.PrepareCategorySearchModelAsync(new CategorySearchModel());
+        var model = await _categoryModelFactory.PrepareCategorySearchModelAsync(new WahajCategorySearchModel());
 
         return View(model);
     }
 
     [HttpPost]
-    public virtual async Task<IActionResult> List(CategorySearchModel searchModel)
+    public virtual async Task<IActionResult> List(WahajCategorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
             return await AccessDeniedDataTablesJson();
@@ -231,13 +231,13 @@ public partial class WahajCategoryController : BaseAdminController
             return AccessDeniedView();
 
         //prepare model
-        var model = await _categoryModelFactory.PrepareCategoryModelAsync(new CategoryModel(), null);
+        var model = await _categoryModelFactory.PrepareCategoryModelAsync(new WahajCategoryModel(), null);
 
         return View(model);
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    public virtual async Task<IActionResult> Create(CategoryModel model, bool continueEditing)
+    public virtual async Task<IActionResult> Create(WahajCategoryModel model, bool continueEditing)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
             return AccessDeniedView();
@@ -311,7 +311,7 @@ public partial class WahajCategoryController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    public virtual async Task<IActionResult> Edit(CategoryModel model, bool continueEditing)
+    public virtual async Task<IActionResult> Edit(WahajCategoryModel model, bool continueEditing)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
             return AccessDeniedView();
@@ -515,7 +515,7 @@ public partial class WahajCategoryController : BaseAdminController
     #region Products
 
     [HttpPost]
-    public virtual async Task<IActionResult> ProductList(CategoryProductSearchModel searchModel)
+    public virtual async Task<IActionResult> ProductList(WahajCategoryProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
             return await AccessDeniedDataTablesJson();
@@ -530,7 +530,7 @@ public partial class WahajCategoryController : BaseAdminController
         return Json(model);
     }
 
-    public virtual async Task<IActionResult> ProductUpdate(CategoryProductModel model)
+    public virtual async Task<IActionResult> ProductUpdate(WahajCategoryProductModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
             return await AccessDeniedDataTablesJson();
@@ -566,13 +566,13 @@ public partial class WahajCategoryController : BaseAdminController
             return AccessDeniedView();
 
         //prepare model
-        var model = await _categoryModelFactory.PrepareAddProductToCategorySearchModelAsync(new AddProductToCategorySearchModel());
+        var model = await _categoryModelFactory.PrepareAddProductToCategorySearchModelAsync(new AddProductToWahajCategorySearchModel());
 
         return View(model);
     }
 
     [HttpPost]
-    public virtual async Task<IActionResult> ProductAddPopupList(AddProductToCategorySearchModel searchModel)
+    public virtual async Task<IActionResult> ProductAddPopupList(AddProductToWahajCategorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
             return await AccessDeniedDataTablesJson();
@@ -585,7 +585,7 @@ public partial class WahajCategoryController : BaseAdminController
 
     [HttpPost]
     [FormValueRequired("save")]
-    public virtual async Task<IActionResult> ProductAddPopup(AddProductToCategoryModel model)
+    public virtual async Task<IActionResult> ProductAddPopup(AddProductToWahajCategoryModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
             return AccessDeniedView();
@@ -614,7 +614,7 @@ public partial class WahajCategoryController : BaseAdminController
 
         ViewBag.RefreshPage = true;
 
-        return View(new AddProductToCategorySearchModel());
+        return View(new AddProductToWahajCategorySearchModel());
     }
 
     #endregion

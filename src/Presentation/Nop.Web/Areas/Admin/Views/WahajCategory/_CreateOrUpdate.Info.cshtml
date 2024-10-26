@@ -1,7 +1,7 @@
-﻿@model CategoryModel
+﻿@model WahajCategoryModel
 
 <div class="card-body">
-    @(await Html.LocalizedEditorAsync<CategoryModel, CategoryLocalizedModel>("category-name-localized",
+    @(await Html.LocalizedEditorAsync<WahajCategoryModel, WahajCategoryLocalizedModel>("category-name-localized",
     @<div>
         <div class="form-group row">
             <div class="col-md-3">
@@ -13,6 +13,7 @@
             </div>
         </div>
         <div class="form-group row">
+            <a href="d:\nopcom47\nop_commerce_for_blog\src\presentation\nop.web\areas\admin\views\wahajcategory\_createorupdate.info.cshtml">d:\nopcom47\nop_commerce_for_blog\src\presentation\nop.web\areas\admin\views\wahajcategory\_createorupdate.info.cshtml</a>
             <div class="col-md-3">
                 <nop-label asp-for="@Model.Locales[item].Description" />
             </div>

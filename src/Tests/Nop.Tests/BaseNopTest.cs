@@ -274,6 +274,7 @@ public partial class BaseNopTest
         //services
         services.AddTransient<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
         services.AddTransient<ICategoryService, CategoryService>();
+        services.AddTransient<IWahajCategoryService, WahajCategoryService>();
         services.AddTransient<ICompareProductsService, CompareProductsService>();
         services.AddTransient<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
         services.AddTransient<IManufacturerService, ManufacturerService>();
@@ -465,6 +466,7 @@ public partial class BaseNopTest
         services.AddTransient<IBlogModelFactory, BlogModelFactory>();
         services.AddTransient<ICampaignModelFactory, CampaignModelFactory>();
         services.AddTransient<ICategoryModelFactory, CategoryModelFactory>();
+        services.AddTransient<IWahajCategoryModelFactory, WahajCategoryModelFactory>();
         services.AddTransient<ICheckoutAttributeModelFactory, CheckoutAttributeModelFactory>();
         services.AddTransient<ICommonModelFactory, CommonModelFactory>();
         services.AddTransient<ICountryModelFactory, CountryModelFactory>();

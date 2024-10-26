@@ -13,7 +13,7 @@ public partial interface IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the category search model
     /// </returns>
-    Task<CategorySearchModel> PrepareCategorySearchModelAsync(CategorySearchModel searchModel);
+    Task<WahajCategorySearchModel> PrepareCategorySearchModelAsync(WahajCategorySearchModel searchModel);
 
     /// <summary>
     /// Prepare paged category list model
@@ -23,7 +23,7 @@ public partial interface IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the category list model
     /// </returns>
-    Task<CategoryListModel> PrepareCategoryListModelAsync(CategorySearchModel searchModel);
+    Task<WahajCategoryListModel> PrepareCategoryListModelAsync(WahajCategorySearchModel searchModel);
 
     /// <summary>
     /// Prepare category model
@@ -35,7 +35,7 @@ public partial interface IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the category model
     /// </returns>
-    Task<CategoryModel> PrepareCategoryModelAsync(CategoryModel model, CategoryWahaj category, bool excludeProperties = false);
+    Task<WahajCategoryModel> PrepareCategoryModelAsync(WahajCategoryModel model, CategoryWahaj category, bool excludeProperties = false);
 
     /// <summary>
     /// Prepare paged category product list model
@@ -46,7 +46,7 @@ public partial interface IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the category product list model
     /// </returns>
-    Task<CategoryProductListModel> PrepareCategoryProductListModelAsync(CategoryProductSearchModel searchModel, CategoryWahaj category);
+    Task<WahajCategoryProductListModel> PrepareCategoryProductListModelAsync(WahajCategoryProductSearchModel searchModel, CategoryWahaj category);
 
     /// <summary>
     /// Prepare product search model to add to the category
@@ -56,7 +56,7 @@ public partial interface IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the product search model to add to the category
     /// </returns>
-    Task<AddProductToCategorySearchModel> PrepareAddProductToCategorySearchModelAsync(AddProductToCategorySearchModel searchModel);
+    Task<AddProductToWahajCategorySearchModel> PrepareAddProductToCategorySearchModelAsync(AddProductToWahajCategorySearchModel searchModel);
 
     /// <summary>
     /// Prepare paged product list model to add to the category
@@ -66,5 +66,5 @@ public partial interface IWahajCategoryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the product list model to add to the category
     /// </returns>
-    Task<AddProductToCategoryListModel> PrepareAddProductToCategoryListModelAsync(AddProductToCategorySearchModel searchModel);
+    Task<AddProductToWahajCategoryListModel> PrepareAddProductToCategoryListModelAsync(AddProductToWahajCategorySearchModel searchModel);
 }
