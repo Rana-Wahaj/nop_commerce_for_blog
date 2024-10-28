@@ -126,6 +126,7 @@ public partial interface IBaseAdminModelFactory
     /// <returns>A task that represents the asynchronous operation</returns>
     Task PrepareManufacturersAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
 
+    Task PrepareBrandAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
     /// <summary>
     /// Prepare available vendors
     /// </summary>

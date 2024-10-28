@@ -19,6 +19,8 @@ public static partial class NopModelCacheDefaults
     /// </summary>
     public static CacheKey ManufacturersListKey => new("Nop.pres.admin.manufacturers.list");
 
+    public static CacheKey BrandListKey => new("Nop.pres.admin.brands.list");
+
     /// <summary>
     /// Key for vendors caching
     /// </summary>

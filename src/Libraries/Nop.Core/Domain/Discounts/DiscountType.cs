@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Discounts;
+﻿namespace Nop.Core.Domain.Discounts;
 
 /// <summary>
 /// Represents a discount type
@@ -33,5 +33,6 @@ public enum DiscountType
     /// <summary>
     /// Assigned to order subtotal
     /// </summary>
-    AssignedToOrderSubTotal = 20
+    AssignedToOrderSubTotal = 20,
+    AssignedToBrand = 6
 }

@@ -8,68 +8,18 @@ namespace Nop.Web.Areas.Admin.Factories;
 /// </summary>
 public partial interface IBrandModelFactory
 {
-    /// <summary>
-    /// Prepare manufacturer search model
-    /// </summary>
-    /// <param name="searchModel">Manufacturer search model</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the manufacturer search model
-    /// </returns>
+
     Task<BrandSearchModel> PrepareBrandSearchModelAsync(BrandSearchModel searchModel);
 
-    ///// <summary>
-    ///// Prepare paged manufacturer list model
-    ///// </summary>
-    ///// <param name="searchModel">Manufacturer search model</param>
-    ///// <returns>
-    ///// A task that represents the asynchronous operation
-    ///// The task result contains the manufacturer list model
-    ///// </returns>
     Task<BrandListModel> PrepareBrandListModelAsync(BrandSearchModel searchModel);
 
-    ///// <summary>
-    ///// Prepare manufacturer model
-    ///// </summary>
-    ///// <param name="model">Manufacturer model</param>
-    ///// <param name="manufacturer">Manufacturer</param>
-    ///// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-    ///// <returns>
-    ///// A task that represents the asynchronous operation
-    ///// The task result contains the manufacturer model
-    ///// </returns>
-    //Task<ManufacturerModel> PrepareManufacturerModelAsync(ManufacturerModel model,
-    //    Manufacturer manufacturer, bool excludeProperties = false);
+  
+    Task<BrandModel> PrepareBrandModelAsync(BrandModel model, Brand brand, bool excludeProperties = false);
 
-    ///// <summary>
-    ///// Prepare paged manufacturer product list model
-    ///// </summary>
-    ///// <param name="searchModel">Manufacturer product search model</param>
-    ///// <param name="manufacturer">Manufacturer</param>
-    ///// <returns>
-    ///// A task that represents the asynchronous operation
-    ///// The task result contains the manufacturer product list model
-    ///// </returns>
-    //Task<ManufacturerProductListModel> PrepareManufacturerProductListModelAsync(ManufacturerProductSearchModel searchModel,
-    //    Manufacturer manufacturer);
+    Task<BrandProductListModel> PrepareBrandProductListModelAsync(BrandProductSearchModel searchModel, Brand brand);
 
-    ///// <summary>
-    ///// Prepare product search model to add to the manufacturer
-    ///// </summary>
-    ///// <param name="searchModel">Product search model to add to the manufacturer</param>
-    ///// <returns>
-    ///// A task that represents the asynchronous operation
-    ///// The task result contains the product search model to add to the manufacturer
-    ///// </returns>
-    //Task<AddProductToManufacturerSearchModel> PrepareAddProductToManufacturerSearchModelAsync(AddProductToManufacturerSearchModel searchModel);
+    Task<AddProductToBrandSearchModel> PrepareAddProductToBrandSearchModelAsync(AddProductToBrandSearchModel searchModel);
 
-    ///// <summary>
-    ///// Prepare paged product list model to add to the manufacturer
-    ///// </summary>
-    ///// <param name="searchModel">Product search model to add to the manufacturer</param>
-    ///// <returns>
-    ///// A task that represents the asynchronous operation
-    ///// The task result contains the product list model to add to the manufacturer
-    ///// </returns>
-    //Task<AddProductToManufacturerListModel> PrepareAddProductToManufacturerListModelAsync(AddProductToManufacturerSearchModel searchModel);
+
+    Task<AddProductToManufacturerListModel> PrepareAddProductToManufacturerListModelAsync(AddProductToManufacturerSearchModel searchModel);
 }

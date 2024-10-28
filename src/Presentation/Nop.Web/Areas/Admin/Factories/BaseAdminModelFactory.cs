@@ -46,6 +46,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
+    protected readonly IBrandService _brandService;
     protected readonly IManufacturerTemplateService _manufacturerTemplateService;
     protected readonly IPluginService _pluginService;
     protected readonly IProductTemplateService _productTemplateService;
@@ -74,7 +75,8 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         ILanguageService languageService,
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
-        IManufacturerTemplateService manufacturerTemplateService,
+        IBrandService brandService,
+    IManufacturerTemplateService manufacturerTemplateService,
         IPluginService pluginService,
         IProductTemplateService productTemplateService,
         ISpecificationAttributeService specificationAttributeService,
@@ -92,6 +94,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         _currencyService = currencyService;
         _customerActivityService = customerActivityService;
         _customerService = customerService;
+        _brandService = brandService;
         _dateRangeService = dateRangeService;
         _dateTimeHelper = dateTimeHelper;
         _emailAccountService = emailAccountService;
@@ -184,6 +187,32 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         {
             var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: true);
             return manufacturers.Select(m => new SelectListItem
+            {
+                Text = m.Name,
+                Value = m.Id.ToString()
+            });
+        });
+
+        var result = new List<SelectListItem>();
+        //clone the list to ensure that "selected" property is not set
+        foreach (var item in listItems)
+        {
+            result.Add(new SelectListItem
+            {
+                Text = item.Text,
+                Value = item.Value
+            });
+        }
+
+        return result;
+    }
+
+    protected virtual async Task<List<SelectListItem>> GetBrandListAsync()
+    {
+        var listItems = await _staticCacheManager.GetAsync(NopModelCacheDefaults.BrandListKey, async () =>
+        {
+            var brand = await _brandService.GetAllBrandsAsync(showHidden: true);
+            return brand.Select(m => new SelectListItem
             {
                 Text = m.Name,
                 Value = m.Id.ToString()
@@ -538,6 +567,21 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
     }
 
+    public virtual async Task PrepareBrandAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        //prepare available manufacturers
+        var availableBrandItems = await GetManufacturerListAsync();
+        foreach (var brandItem in availableBrandItems)
+        {
+            items.Add(brandItem);
+        }
+
+        //insert special item for the default value
+        await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
+    }
+
     /// <summary>
     /// Prepare available vendors
     /// </summary>
@@ -750,6 +794,22 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
 
         //prepare available manufacturer templates
         var availableTemplates = await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync();
+        foreach (var template in availableTemplates)
+        {
+            items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
+        }
+
+        //insert special item for the default value
+        await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
+    }
+
+    public virtual async Task PrepareBrandTemplatesAsync(IList<SelectListItem> items,
+       bool withSpecialDefaultItem = true, string defaultItemText = null)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        //prepare available manufacturer templates
+        var availableTemplates = await _brandTemplateService.GetAllBrandTemplatesAsync();
         foreach (var template in availableTemplates)
         {
             items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });

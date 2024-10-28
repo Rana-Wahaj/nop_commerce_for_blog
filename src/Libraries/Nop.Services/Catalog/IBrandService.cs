@@ -16,7 +16,7 @@ public partial interface IBrandService
         int pageSize = int.MaxValue,
         bool showHidden = false,
         bool? overridePublished = null);
-    Task<Brand> GetBrandByIdAsync(int manufacturerId);
+    Task<Brand> GetBrandByIdAsync(int brandId);
     Task<IList<Brand>> GetBrandsByIdsAsync(int[] brandIds);
     Task InsertBrandAsync(Brand brand);
     Task UpdateBrandAsync(Brand brand);
@@ -29,8 +29,11 @@ public partial interface IBrandService
     //Task<IPagedList<Brand>> GetBrandsWithAppliedDiscountAsync(int? discountId = null,
     //    bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
     //Task DeleteProductBrandsync(ProductManufacturer productManufacturer);
-    //Task<IPagedList<ProductManufacturer>> GetProductBrandsByBrandIdAsync(int manufacturerId,
-    //    int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+    
+    
+    
+   
+
     //Task<IList<ProductManufacturer>> GetProductBrandsByProductIdAsync(int productId, bool showHidden = false);
     //Task<ProductManufacturer> GetProductBrandByIdAsync(int productManufacturerId);
     //Task InsertProductBrandAsync(ProductManufacturer productManufacturer);

@@ -18,9 +18,9 @@ public partial class BrandService : IBrandService
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerService _customerService;
     protected readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
-    protected readonly IRepository<Brand> _brands;
+    protected readonly IRepository<Brand> _brandRepository;
     protected readonly IRepository<Product> _productRepository;
-    protected readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+    protected readonly IRepository<ProductBrand> _productBrandRepository;
     protected readonly IRepository<ProductCategory> _productCategoryRepository;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreContext _storeContext;
@@ -38,7 +38,7 @@ public partial class BrandService : IBrandService
         IRepository<DiscountManufacturerMapping> discountManufacturerMappingRepository,
        IRepository<Brand> brands,
         IRepository<Product> productRepository,
-        IRepository<ProductManufacturer> productManufacturerRepository,
+        IRepository<ProductBrand> productBrandRepository,
         IRepository<ProductCategory> productCategoryRepository,
         IStaticCacheManager staticCacheManager,
         IStoreContext storeContext,
@@ -50,9 +50,9 @@ public partial class BrandService : IBrandService
         _categoryService = categoryService;
         _customerService = customerService;
         _discountManufacturerMappingRepository = discountManufacturerMappingRepository;
-        _brands = brands;
+        _brandRepository = brands;
         _productRepository = productRepository;
-        _productManufacturerRepository = productManufacturerRepository;
+        _productBrandRepository = productBrandRepository;
         _productCategoryRepository = productCategoryRepository;
         _staticCacheManager = staticCacheManager;
         _storeContext = storeContext;
@@ -66,12 +66,12 @@ public partial class BrandService : IBrandService
 
     public virtual async Task DeleteBrandAsync(Brand brand)
     {
-        await _brands.DeleteAsync(brand);
+        await _brandRepository.DeleteAsync(brand);
     }
 
     public virtual async Task DeleteBrandsAsync(IList<Brand> brands)
     {
-        await _brands.DeleteAsync(brands);
+        await _brandRepository.DeleteAsync(brands);
     }
 
     public virtual async Task<IPagedList<Brand>> GetAllBrandsAsync(string brandName = "",
@@ -81,7 +81,7 @@ public partial class BrandService : IBrandService
         bool showHidden = false,
         bool? overridePublished = null)
     {
-        return await _brands.GetAllPagedAsync(async query =>
+        return await _brandRepository.GetAllPagedAsync(async query =>
         {
             if (!showHidden)
                 query = query.Where(m => m.Published);
@@ -105,23 +105,56 @@ public partial class BrandService : IBrandService
 
     public virtual async Task<Brand> GetBrandByIdAsync(int brandId)
     {
-        return await _brands.GetByIdAsync(brandId, cache => default);
+        return await _brandRepository.GetByIdAsync(brandId, cache => default);
     }
 
     public virtual async Task<IList<Brand>> GetBrandsByIdsAsync(int[] brandIds)
     {
-        return await _brands.GetByIdsAsync(brandIds, includeDeleted: false);
+        return await _brandRepository.GetByIdsAsync(brandIds, includeDeleted: false);
     }
 
     public virtual async Task InsertBrandAsync(Brand brand)
     {
-        await _brands.InsertAsync(brand);
+        await _brandRepository.InsertAsync(brand);
     }
 
     public virtual async Task UpdateBrandAsync(Brand brand)
     {
-        await _brands.UpdateAsync(brand);
+        await _brandRepository.UpdateAsync(brand);
     }
 
+
+    public virtual async Task<IPagedList<ProductBrand>> GetProductBrandsByBrandIdAsync(int brandId,
+       int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+    {
+        if (brandId == 0)
+            return new PagedList<ProductBrand>(new List<ProductBrand>(), pageIndex, pageSize);
+
+        var query = from pm in _productBrandRepository.Table
+                    join p in _productRepository.Table on pm.ProductId equals p.Id
+                    where pm.BrandId == brandId && !p.Deleted
+                    orderby pm.DisplayOrder, pm.Id
+                    select pm;
+
+        if (!showHidden)
+        {
+            var brandQuery = _productRepository.Table.Where(m => m.Published);
+
+            //apply store mapping constraints
+            var store = await _storeContext.GetCurrentStoreAsync();
+            brandQuery = await _storeMappingService.ApplyStoreMapping(brandQuery, store.Id);
+
+            //apply ACL constraints
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            brandQuery = await _aclService.ApplyAcl(brandQuery, customer);
+
+            query = query.Where(pm => brandQuery.Any(m => m.Id == pm.BrandId));
+        }
+
+        return await query.ToPagedListAsync(pageIndex, pageSize);
+    }
+
+
+   
     #endregion
 }
