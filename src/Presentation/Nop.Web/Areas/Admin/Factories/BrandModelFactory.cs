@@ -218,7 +218,7 @@ public partial class BrandModelFactory : IBrandModelFactory
          ArgumentNullException.ThrowIfNull(brand);
 
          var productBrand = await _brandService.GetProductBrandsByBrandIdAsync(showHidden: true,
-            BrandId: brand.Id,
+            brandId: brand.Id,
              pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
        
@@ -227,7 +227,7 @@ public partial class BrandModelFactory : IBrandModelFactory
              return productBrand.SelectAwait(async productBrand =>
              {
                   
-                 var BRandProductModel = productBrand.ToModel<BrandProductModel>();
+                 var brandProductModel = productBrand.ToModel<BrandProductModel>();
 
                  
                brandProductModel.ProductName = (await _productService.GetProductByIdAsync(productBrand.ProductId))?.Name;
@@ -293,6 +293,10 @@ public partial class BrandModelFactory : IBrandModelFactory
 
          return model;
      }
+
+ 
+
+
 
     #endregion
 }

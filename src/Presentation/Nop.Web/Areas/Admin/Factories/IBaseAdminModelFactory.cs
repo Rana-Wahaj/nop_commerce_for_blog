@@ -218,6 +218,12 @@ public partial interface IBaseAdminModelFactory
     Task PrepareManufacturerTemplatesAsync(IList<SelectListItem> items,
         bool withSpecialDefaultItem = true, string defaultItemText = null);
 
+
+
+
+
+    Task PrepareBrandTemplatesAsync(IList<SelectListItem> items,
+        bool withSpecialDefaultItem = true, string defaultItemText = null);
     /// <summary>
     /// Prepare available load plugin modes
     /// </summary>

@@ -21,5 +21,5 @@ public partial interface IBrandModelFactory
     Task<AddProductToBrandSearchModel> PrepareAddProductToBrandSearchModelAsync(AddProductToBrandSearchModel searchModel);
 
 
-    Task<AddProductToManufacturerListModel> PrepareAddProductToManufacturerListModelAsync(AddProductToManufacturerSearchModel searchModel);
+    Task<AddProductToBrandListModel> PrepareAddProductToBrandListModelAsync(AddProductToBrandSearchModel searchModel);
 }

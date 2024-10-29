@@ -90,46 +90,50 @@ public partial class BrandController : BaseAdminController
 
     #region Utilities
 
-    protected virtual async Task UpdateLocalesAsync(Manufacturer manufacturer, ManufacturerModel model)
+    
+
+    protected virtual async Task UpdateLocalesAsync(Brand brand, BrandModel model)
     {
         foreach (var localized in model.Locales)
         {
-            await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
+            await _localizedEntityService.SaveLocalizedValueAsync(brand,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
 
-            await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
+            await _localizedEntityService.SaveLocalizedValueAsync(brand,
                 x => x.Description,
                 localized.Description,
                 localized.LanguageId);
 
-            await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
+            await _localizedEntityService.SaveLocalizedValueAsync(brand,
                 x => x.MetaKeywords,
                 localized.MetaKeywords,
                 localized.LanguageId);
 
-            await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
+            await _localizedEntityService.SaveLocalizedValueAsync(brand,
                 x => x.MetaDescription,
                 localized.MetaDescription,
                 localized.LanguageId);
 
-            await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
+            await _localizedEntityService.SaveLocalizedValueAsync(brand,
                 x => x.MetaTitle,
                 localized.MetaTitle,
                 localized.LanguageId);
 
             //search engine name
-            var seName = await _urlRecordService.ValidateSeNameAsync(manufacturer, localized.SeName, localized.Name, false);
-            await _urlRecordService.SaveSlugAsync(manufacturer, seName, localized.LanguageId);
+            var seName = await _urlRecordService.ValidateSeNameAsync(brand, localized.SeName, localized.Name, false);
+            await _urlRecordService.SaveSlugAsync(brand, seName, localized.LanguageId);
         }
     }
 
-    protected virtual async Task UpdatePictureSeoNamesAsync(Manufacturer manufacturer)
+  
+
+    protected virtual async Task UpdatePictureSeoNamesAsync(Brand brand)
     {
-        var picture = await _pictureService.GetPictureByIdAsync(manufacturer.PictureId);
+        var picture = await _pictureService.GetPictureByIdAsync(brand.PictureId);
         if (picture != null)
-            await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(manufacturer.Name));
+            await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(brand.Name));
     }
 
     protected virtual async Task SaveManufacturerAclAsync(Brand brand, BrandModel model)
@@ -218,217 +222,221 @@ public partial class BrandController : BaseAdminController
 
     #region Create / Edit / Delete
 
-    //public virtual async Task<IActionResult> Create()
-    //{
-    //    if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
-    //        return AccessDeniedView();
+    public virtual async Task<IActionResult> Create()
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
+            return AccessDeniedView();
 
-    //    //prepare model
-    //    var model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(new ManufacturerModel(), null);
+        //prepare model
+        var model = await _brandModelFactory.PrepareBrandModelAsync(new BrandModel(), null);
 
-    //    return View(model);
-    //}
+        return View(model);
+    }
 
-    //[HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    //public virtual async Task<IActionResult> Create(ManufacturerModel model, bool continueEditing)
-    //{
-    //    if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
-    //        return AccessDeniedView();
 
-    //    if (ModelState.IsValid)
-    //    {
-    //        var manufacturer = model.ToEntity<Manufacturer>();
-    //        manufacturer.CreatedOnUtc = DateTime.UtcNow;
-    //        manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-    //        await _manufacturerService.InsertManufacturerAsync(manufacturer);
 
-    //        //search engine name
-    //        model.SeName = await _urlRecordService.ValidateSeNameAsync(manufacturer, model.SeName, manufacturer.Name, true);
-    //        await _urlRecordService.SaveSlugAsync(manufacturer, model.SeName, 0);
+    [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    public virtual async Task<IActionResult> Create(BrandModel model, bool continueEditing)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
+            return AccessDeniedView();
 
-    //        //locales
-    //        await UpdateLocalesAsync(manufacturer, model);
+        if (ModelState.IsValid)
+        {
+            var brand = model.ToEntity<Brand>();
+            brand.CreatedOnUtc = DateTime.UtcNow;
+            brand.UpdatedOnUtc = DateTime.UtcNow;
+            await _brandService.InsertBrandAsync(brand);
 
-    //        //discounts
-    //        var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers, showHidden: true, isActive: null);
-    //        foreach (var discount in allDiscounts)
-    //        {
-    //            if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-    //                //manufacturer.AppliedDiscounts.Add(discount);
-    //                await _manufacturerService.InsertDiscountManufacturerMappingAsync(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
+            //search engine name
+            model.SeName = await _urlRecordService.ValidateSeNameAsync(brand, model.SeName, brand.Name, true);
+            await _urlRecordService.SaveSlugAsync(brand, model.SeName, 0);
 
-    //        }
+            //locales
+            await UpdateLocalesAsync(brand, model);
 
-    //        await _manufacturerService.UpdateManufacturerAsync(manufacturer);
+            //discounts
+            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToBrand, showHidden: true, isActive: null);
+            foreach (var discount in allDiscounts)
+            {
+                if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                    //manufacturer.AppliedDiscounts.Add(discount);
+                    await _brandService.InsertDiscountBrandMappingAsync(new DiscountBrandMapping { EntityId = brand.Id, DiscountId = discount.Id });
 
-    //        //update picture seo file name
-    //        await UpdatePictureSeoNamesAsync(manufacturer);
+            }
 
-    //        //ACL (customer roles)
-    //        await SaveManufacturerAclAsync(manufacturer, model);
+            await _brandService.UpdateBrandAsync(brand);
 
-    //        //stores
-    //        await SaveStoreMappingsAsync(manufacturer, model);
+            //update picture seo file name
+            await UpdatePictureSeoNamesAsync(brand);
 
-    //        //activity log
-    //        await _customerActivityService.InsertActivityAsync("AddNewManufacturer",
-    //            string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewManufacturer"), manufacturer.Name), manufacturer);
+            //ACL (customer roles)
+            await SaveManufacturerAclAsync(brand, model);
 
-    //        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Added"));
+            //stores
+            await SaveStoreMappingsAsync(brand, model);
 
-    //        if (!continueEditing)
-    //            return RedirectToAction("List");
+            //activity log
+            await _customerActivityService.InsertActivityAsync("AddNewBrand",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewBrand"), brand.Name), brand);
 
-    //        return RedirectToAction("Edit", new { id = manufacturer.Id });
-    //    }
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Brands.Added"));
 
-    //    //prepare model
-    //    model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(model, null, true);
+            if (!continueEditing)
+                return RedirectToAction("List");
 
-    //    //if we got this far, something failed, redisplay form
-    //    return View(model);
-    //}
+            return RedirectToAction("Edit", new { id = brand.Id });
+        }
 
-    //public virtual async Task<IActionResult> Edit(int id)
-    //{
-    //    if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
-    //        return AccessDeniedView();
+        //prepare model
+        model = await _brandModelFactory.PrepareBrandModelAsync(model, null, true);
 
-    //    //try to get a manufacturer with the specified id
-    //    var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(id);
-    //    if (manufacturer == null || manufacturer.Deleted)
-    //        return RedirectToAction("List");
+        //if we got this far, something failed, redisplay form
+        return View(model);
+    }
 
-    //    //prepare model
-    //    var model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(null, manufacturer);
+    public virtual async Task<IActionResult> Edit(int id)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
+            return AccessDeniedView();
 
-    //    return View(model);
-    //}
+        //try to get a manufacturer with the specified id
+        var brand = await _brandService.GetBrandByIdAsync(id);
+        if (brand == null || brand.Deleted)
+            return RedirectToAction("List");
 
-    //[HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    //public virtual async Task<IActionResult> Edit(ManufacturerModel model, bool continueEditing)
-    //{
-    //    if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
-    //        return AccessDeniedView();
+        //prepare model
+        var model = await _brandModelFactory.PrepareBrandModelAsync(null, brand);
 
-    //    //try to get a manufacturer with the specified id
-    //    var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(model.Id);
-    //    if (manufacturer == null || manufacturer.Deleted)
-    //        return RedirectToAction("List");
+        return View(model);
+    }
 
-    //    if (ModelState.IsValid)
-    //    {
-    //        var prevPictureId = manufacturer.PictureId;
-    //        manufacturer = model.ToEntity(manufacturer);
-    //        manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-    //        await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
-    //        //search engine name
-    //        model.SeName = await _urlRecordService.ValidateSeNameAsync(manufacturer, model.SeName, manufacturer.Name, true);
-    //        await _urlRecordService.SaveSlugAsync(manufacturer, model.SeName, 0);
 
-    //        //locales
-    //        await UpdateLocalesAsync(manufacturer, model);
+    [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    public virtual async Task<IActionResult> Edit(BrandModel model, bool continueEditing)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
+            return AccessDeniedView();
 
-    //        //discounts
-    //        var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers, showHidden: true, isActive: null);
-    //        foreach (var discount in allDiscounts)
-    //        {
-    //            if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-    //            {
-    //                //new discount
-    //                if (await _manufacturerService.GetDiscountAppliedToManufacturerAsync(manufacturer.Id, discount.Id) is null)
-    //                    await _manufacturerService.InsertDiscountManufacturerMappingAsync(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
-    //            }
-    //            else
-    //            {
-    //                //remove discount
-    //                if (await _manufacturerService.GetDiscountAppliedToManufacturerAsync(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
-    //                    await _manufacturerService.DeleteDiscountManufacturerMappingAsync(discountManufacturerMapping);
-    //            }
-    //        }
+        //try to get a manufacturer with the specified id
+        var brand = await _brandService.GetBrandByIdAsync(model.Id);
+        if (brand == null || brand.Deleted)
+            return RedirectToAction("List");
 
-    //        await _manufacturerService.UpdateManufacturerAsync(manufacturer);
+        if (ModelState.IsValid)
+        {
+            var prevPictureId = brand.PictureId;
+            brand = model.ToEntity(brand);
+            brand.UpdatedOnUtc = DateTime.UtcNow;
+            await _brandService.UpdateBrandAsync(brand);
 
-    //        //delete an old picture (if deleted or updated)
-    //        if (prevPictureId > 0 && prevPictureId != manufacturer.PictureId)
-    //        {
-    //            var prevPicture = await _pictureService.GetPictureByIdAsync(prevPictureId);
-    //            if (prevPicture != null)
-    //                await _pictureService.DeletePictureAsync(prevPicture);
-    //        }
+            //search engine name
+            model.SeName = await _urlRecordService.ValidateSeNameAsync(brand, model.SeName, brand.Name, true);
+            await _urlRecordService.SaveSlugAsync(brand, model.SeName, 0);
 
-    //        //update picture seo file name
-    //        await UpdatePictureSeoNamesAsync(manufacturer);
+            //locales
+            await UpdateLocalesAsync(brand, model);
 
-    //        //ACL
-    //        await SaveManufacturerAclAsync(manufacturer, model);
+            //discounts
+            var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToBrand, showHidden: true, isActive: null);
+            foreach (var discount in allDiscounts)
+            {
+                if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                {
+                    //new discount
+                    if (await _brandService.GetDiscountAppliedToBrandAsync(brand.Id, discount.Id) is null)
+                        await _brandService.InsertDiscountBrandMappingAsync(new DiscountBrandMapping { EntityId = brand.Id, DiscountId = discount.Id });
+                }
+                else
+                {
+                    //remove discount
+                    if (await _brandService.GetDiscountAppliedToBrandAsync(brand.Id, discount.Id) is DiscountBrandMapping discountBrandMapping)
+                        await _brandService.DeleteDiscountBrandMappingAsync(discountBrandMapping);
+                }
+            }
 
-    //        //stores
-    //        await SaveStoreMappingsAsync(manufacturer, model);
+            await _brandService.UpdateBrandAsync(brand);
 
-    //        //activity log
-    //        await _customerActivityService.InsertActivityAsync("EditManufacturer",
-    //            string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
+            //delete an old picture (if deleted or updated)
+            if (prevPictureId > 0 && prevPictureId != brand.PictureId)
+            {
+                var prevPicture = await _pictureService.GetPictureByIdAsync(prevPictureId);
+                if (prevPicture != null)
+                    await _pictureService.DeletePictureAsync(prevPicture);
+            }
 
-    //        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Updated"));
+            //update picture seo file name
+            await UpdatePictureSeoNamesAsync(brand);
 
-    //        if (!continueEditing)
-    //            return RedirectToAction("List");
+            //ACL
+            await SaveManufacturerAclAsync(brand, model);
 
-    //        return RedirectToAction("Edit", new { id = manufacturer.Id });
-    //    }
+            //stores
+            await SaveStoreMappingsAsync(brand, model);
 
-    //    //prepare model
-    //    model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(model, manufacturer, true);
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditBrand",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditBrand"), brand.Name), brand);
 
-    //    //if we got this far, something failed, redisplay form
-    //    return View(model);
-    //}
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Brands.Updated"));
 
-    //[HttpPost]
-    //public virtual async Task<IActionResult> Delete(int id)
-    //{
-    //    if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
-    //        return AccessDeniedView();
+            if (!continueEditing)
+                return RedirectToAction("List");
 
-    //    //try to get a manufacturer with the specified id
-    //    var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(id);
-    //    if (manufacturer == null)
-    //        return RedirectToAction("List");
+            return RedirectToAction("Edit", new { id = brand.Id });
+        }
 
-    //    await _manufacturerService.DeleteManufacturerAsync(manufacturer);
+        //prepare model
+        model = await _brandModelFactory.PrepareBrandModelAsync(model, brand, true);
 
-    //    //activity log
-    //    await _customerActivityService.InsertActivityAsync("DeleteManufacturer",
-    //        string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
+        //if we got this far, something failed, redisplay form
+        return View(model);
+    }
 
-    //    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Deleted"));
+    [HttpPost]
+    public virtual async Task<IActionResult> Delete(int id)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
+            return AccessDeniedView();
 
-    //    return RedirectToAction("List");
-    //}
+        //try to get a manufacturer with the specified id
+        var brand = await _brandService.GetBrandByIdAsync(id);
+        if (brand == null)
+            return RedirectToAction("List");
 
-    //[HttpPost]
-    //public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
-    //{
-    //    if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
-    //        return await AccessDeniedDataTablesJson();
+        await _brandService.DeleteBrandAsync(brand);
 
-    //    if (selectedIds == null || !selectedIds.Any())
-    //        return NoContent();
+        //activity log
+        await _customerActivityService.InsertActivityAsync("DeleteBrand",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteBrand"), brand.Name), brand);
 
-    //    var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray());
-    //    await _manufacturerService.DeleteManufacturersAsync(manufacturers);
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Brands.Deleted"));
 
-    //    var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
-    //    foreach (var manufacturer in manufacturers)
-    //    {
-    //        //activity log
-    //        await _customerActivityService.InsertActivityAsync("DeleteManufacturer", string.Format(locale, manufacturer.Name), manufacturer);
-    //    }
+        return RedirectToAction("List");
+    }
 
-    //    return Json(new { Result = true });
-    //}
+    [HttpPost]
+    public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBrands))
+            return await AccessDeniedDataTablesJson();
+
+        if (selectedIds == null || !selectedIds.Any())
+            return NoContent();
+
+        var brands = await _brandService.GetBrandsByIdsAsync(selectedIds.ToArray());
+        await _brandService.DeleteBrandAsync(brands);
+
+        var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
+        foreach (var brand in brands)
+        {
+            //activity log
+            await _customerActivityService.InsertActivityAsync("DeleteManufacturer", string.Format(locale, brand.Name), brand);
+        }
+
+        return Json(new { Result = true });
+    }
 
     #endregion
 }

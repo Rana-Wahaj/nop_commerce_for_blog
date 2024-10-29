@@ -1,5 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Catalog;
 
@@ -9,7 +10,7 @@ namespace Nop.Services.Catalog;
 public partial interface IBrandService
 {
     Task DeleteBrandAsync(Brand brand);
-    Task DeleteBrandsAsync(IList<Brand> brands);
+   
     Task<IPagedList<Brand>> GetAllBrandsAsync(string brandName = "",
         int storeId = 0,
         int pageIndex = 0,
@@ -21,6 +22,15 @@ public partial interface IBrandService
     Task InsertBrandAsync(Brand brand);
     Task UpdateBrandAsync(Brand brand);
 
+    Task<IPagedList<ProductBrand>> GetProductBrandsByBrandIdAsync(int brandId,
+       int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+
+
+    Task InsertDiscountBrandMappingAsync(DiscountBrandMapping discountBrandMapping);
+    Task<DiscountBrandMapping> GetDiscountAppliedToBrandAsync(int brandId, int discountId);
+    Task DeleteDiscountBrandMappingAsync(DiscountBrandMapping discountBrandMapping);
+    Task DeleteBrandAsync(IList<Brand> brands);
+    
 
     //Task DeleteDiscountBrandMappingAsync(DiscountManufacturerMapping discountManufacturerMapping);
     //Task ClearDiscountBrandServiceMappingAsync(Discount discount);
@@ -29,10 +39,10 @@ public partial interface IBrandService
     //Task<IPagedList<Brand>> GetBrandsWithAppliedDiscountAsync(int? discountId = null,
     //    bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
     //Task DeleteProductBrandsync(ProductManufacturer productManufacturer);
-    
-    
-    
-   
+
+
+
+
 
     //Task<IList<ProductManufacturer>> GetProductBrandsByProductIdAsync(int productId, bool showHidden = false);
     //Task<ProductManufacturer> GetProductBrandByIdAsync(int productManufacturerId);

@@ -17,7 +17,7 @@ public partial class BrandService : IBrandService
     protected readonly IAclService _aclService;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerService _customerService;
-    protected readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
+    protected readonly IRepository<DiscountBrandMapping> _discountBrandMappingRepository;
     protected readonly IRepository<Brand> _brandRepository;
     protected readonly IRepository<Product> _productRepository;
     protected readonly IRepository<ProductBrand> _productBrandRepository;
@@ -35,7 +35,7 @@ public partial class BrandService : IBrandService
         IAclService aclService,
         ICategoryService categoryService,
         ICustomerService customerService,
-        IRepository<DiscountManufacturerMapping> discountManufacturerMappingRepository,
+        IRepository<DiscountBrandMapping> discountBrandMappingRepository,
        IRepository<Brand> brands,
         IRepository<Product> productRepository,
         IRepository<ProductBrand> productBrandRepository,
@@ -49,7 +49,7 @@ public partial class BrandService : IBrandService
         _aclService = aclService;
         _categoryService = categoryService;
         _customerService = customerService;
-        _discountManufacturerMappingRepository = discountManufacturerMappingRepository;
+        _discountBrandMappingRepository = discountBrandMappingRepository;
         _brandRepository = brands;
         _productRepository = productRepository;
         _productBrandRepository = productBrandRepository;
@@ -69,7 +69,7 @@ public partial class BrandService : IBrandService
         await _brandRepository.DeleteAsync(brand);
     }
 
-    public virtual async Task DeleteBrandsAsync(IList<Brand> brands)
+    public virtual async Task DeleteBrandAsync(IList<Brand> brands)
     {
         await _brandRepository.DeleteAsync(brands);
     }
@@ -155,6 +155,27 @@ public partial class BrandService : IBrandService
     }
 
 
-   
+    public async Task InsertDiscountBrandMappingAsync(DiscountBrandMapping discountBrandMapping)
+    {
+        await _discountBrandMappingRepository.InsertAsync(discountBrandMapping);
+    }
+
+    public async Task<DiscountBrandMapping> GetDiscountAppliedToBrandAsync(int brandId, int discountId)
+    {
+        return await _discountBrandMappingRepository.Table
+            .FirstOrDefaultAsync(dcm => dcm.EntityId == brandId && dcm.DiscountId == discountId);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task DeleteDiscountBrandMappingAsync(DiscountBrandMapping discountBrandMapping)
+    {
+        await _discountBrandMappingRepository.DeleteAsync(discountBrandMapping);
+    }
+
+
+    //public virtual async Task DeleteBrandAsync(Brand brand)
+    //{
+    //    await _brandRepository.DeleteAsync(brand);
+    //}
     #endregion
 }

@@ -47,6 +47,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IBrandService _brandService;
+    protected readonly IBrandTemplateService _brandTemplateService;
     protected readonly IManufacturerTemplateService _manufacturerTemplateService;
     protected readonly IPluginService _pluginService;
     protected readonly IProductTemplateService _productTemplateService;
@@ -76,6 +77,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
         IBrandService brandService,
+        IBrandTemplateService brandTemplateService,
     IManufacturerTemplateService manufacturerTemplateService,
         IPluginService pluginService,
         IProductTemplateService productTemplateService,
@@ -101,6 +103,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         _languageService = languageService;
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
+        _brandTemplateService = brandTemplateService;
         _manufacturerTemplateService = manufacturerTemplateService;
         _pluginService = pluginService;
         _productTemplateService = productTemplateService;

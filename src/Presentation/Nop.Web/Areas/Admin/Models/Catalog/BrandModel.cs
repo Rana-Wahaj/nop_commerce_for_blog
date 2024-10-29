@@ -31,7 +31,7 @@ public partial record BrandModel : BaseNopEntityModel, IAclSupportedModel, IDisc
         SelectedStoreIds = new List<int>();
         AvailableStores = new List<SelectListItem>();
 
-        ManufacturerProductSearchModel = new ManufacturerProductSearchModel();
+        BrandProductSearchModel = new BrandProductSearchModel();
     }
 
     #endregion
@@ -112,7 +112,7 @@ public partial record BrandModel : BaseNopEntityModel, IAclSupportedModel, IDisc
     public IList<int> SelectedDiscountIds { get; set; }
     public IList<SelectListItem> AvailableDiscounts { get; set; }
 
-    public ManufacturerProductSearchModel ManufacturerProductSearchModel { get; set; }
+    public BrandProductSearchModel BrandProductSearchModel { get; set; }
 
     public string PrimaryStoreCurrencyCode { get; set; }
 
