@@ -1,0 +1,85 @@
+﻿@model BrandModel
+
+@if (Model.Id > 0)
+{
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "products-grid",
+    UrlRead = new DataUrl("ProductList", "Brand", new RouteValueDictionary { [nameof(Model.BrandProductSearchModel.BrandId)] = Model.BrandProductSearchModel.BrandId }),
+    UrlDelete = new DataUrl("ProductDelete", "Brand", null),
+    UrlUpdate = new DataUrl("ProductUpdate", "Brand", null),
+    Length = Model.BrandProductSearchModel.PageSize,
+    LengthMenu = Model.BrandProductSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+            {
+    new ColumnProperty(nameof(BrandProductModel.ProductName))
+                {
+    Title = T("Admin.Catalog.Brands.Products.Fields.Product").Text
+                },
+    new ColumnProperty(nameof(BrandProductModel.IsFeaturedProduct))
+                {
+    Title = T("Admin.Catalog.Brands.Products.Fields.IsFeaturedProduct").Text,
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean(),
+                    Editable = true,
+                    EditType = EditType.Checkbox
+                },
+    new ColumnProperty(nameof(BrandProductModel.DisplayOrder))
+                {
+    Title = T("Admin.Catalog.Brands.Products.Fields.DisplayOrder").Text,
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Editable = true,
+                    EditType = EditType.Number
+                },
+    new ColumnProperty(nameof(BrandProductModel.ProductId))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "150",
+                    ClassName = NopColumnClassDefaults.Button,
+    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(BrandProductModel.ProductId)))
+                },
+    new ColumnProperty(nameof(BrandProductModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonsInlineEdit()
+                },
+    new ColumnProperty(nameof(BrandProductModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName = NopColumnClassDefaults.Button
+                }
+            }
+    })
+</div>
+
+<div class="card-footer">
+        <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Brand", new { brandId = Model.Id, btnId = "btnRefreshProducts", formId = "brand-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+            @T("Admin.Catalog.Brands.Products.AddNew")
+    </button>
+    <button type="submit" id="btnRefreshProducts" style="display: none"></button>
+    <script>
+        $(function() {
+            $('#btnRefreshProducts').click(function () {
+                //refresh grid
+                updateTable('#products-grid');
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+</div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Catalog.Brands.Products.SaveBeforeEdit")
+    </div>
+}

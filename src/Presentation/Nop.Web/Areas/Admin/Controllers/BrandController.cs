@@ -428,11 +428,11 @@ public partial class BrandController : BaseAdminController
         var brands = await _brandService.GetBrandsByIdsAsync(selectedIds.ToArray());
         await _brandService.DeleteBrandAsync(brands);
 
-        var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
+        var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteBrand");
         foreach (var brand in brands)
         {
             //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteManufacturer", string.Format(locale, brand.Name), brand);
+            await _customerActivityService.InsertActivityAsync("DeleteBrand", string.Format(locale, brand.Name), brand);
         }
 
         return Json(new { Result = true });

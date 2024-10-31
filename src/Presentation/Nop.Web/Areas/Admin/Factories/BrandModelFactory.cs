@@ -128,7 +128,7 @@ public partial class BrandModelFactory : IBrandModelFactory
 
       
         var brand = await _brandService.GetAllBrandsAsync(showHidden: true,
-            brandName: searchModel.SearcBrandSName,
+            brandName: searchModel.SearchBrandName,
             storeId: searchModel.SearchStoreId,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
             overridePublished: searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1));

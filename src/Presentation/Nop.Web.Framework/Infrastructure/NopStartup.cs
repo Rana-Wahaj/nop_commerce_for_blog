@@ -141,6 +141,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ICompareProductsService, CompareProductsService>();
         services.AddScoped<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
         services.AddScoped<IManufacturerService, ManufacturerService>();
+        services.AddScoped<IBrandService, BrandService>();
         services.AddScoped<IPriceFormatter, PriceFormatter>();
         services.AddScoped<IProductAttributeFormatter, ProductAttributeFormatter>();
         services.AddScoped<IProductAttributeParser, ProductAttributeParser>();
@@ -151,6 +152,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IProductTemplateService, ProductTemplateService>();
         services.AddScoped<ICategoryTemplateService, CategoryTemplateService>();
         services.AddScoped<IManufacturerTemplateService, ManufacturerTemplateService>();
+        services.AddScoped<IBrandTemplateService, BrandTemplateService>();
         services.AddScoped<ITopicTemplateService, TopicTemplateService>();
         services.AddScoped<IProductTagService, ProductTagService>();
         services.AddScoped<IAddressService, AddressService>();

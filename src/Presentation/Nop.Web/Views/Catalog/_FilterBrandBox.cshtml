@@ -1,0 +1,41 @@
+﻿@model BrandFilterModel
+
+<div class="product-filter product-brand-filter">
+    <div class="filter-title">
+        <strong>@T("Filtering.BrandFilter")</strong>
+    </div>
+    <div class="filter-content">
+        <ul class="group product-brand-group">
+            @foreach (var brand in Model.Brands)
+            {
+                <li class="item">
+                    <input id="attribute-brand-@brand.Value" type="checkbox" data-brand-id="@brand.Value" checked="@brand.Selected" />
+                    <label for="attribute-brand-@brand.Value">
+                        @brand.Text
+                    </label>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<script asp-location="Footer">
+    $(function() {
+        var $msEls = $('[data-brand-id]');
+        $msEls.on('change', function () {
+            CatalogProducts.getProducts();
+        });
+
+        $(CatalogProducts).on('before', function (e) {
+            var selectedMs = $.map($msEls, function (el) {
+                var $mEl = $(el);
+                if ($mEl.is(':checked')) return $mEl.data('brand-id')
+                return null;
+            });
+
+            if (selectedMs && selectedMs.length > 0) {
+                e.payload.urlBuilder
+                    .addParameter('ms', selectedMs.join(','));
+            }
+        });
+    });
+</script>

@@ -278,6 +278,7 @@ public partial class BaseNopTest
         services.AddTransient<ICompareProductsService, CompareProductsService>();
         services.AddTransient<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
         services.AddTransient<IManufacturerService, ManufacturerService>();
+        services.AddTransient<IBrandService, BrandService>();
         services.AddTransient<IPriceFormatter, PriceFormatter>();
         services.AddTransient<IProductAttributeFormatter, ProductAttributeFormatter>();
         services.AddTransient<IProductAttributeParser, ProductAttributeParser>();
@@ -288,6 +289,7 @@ public partial class BaseNopTest
         services.AddTransient<IProductTemplateService, ProductTemplateService>();
         services.AddTransient<ICategoryTemplateService, CategoryTemplateService>();
         services.AddTransient<IManufacturerTemplateService, ManufacturerTemplateService>();
+        services.AddTransient<IBrandTemplateService, BrandTemplateService>();
         services.AddTransient<ITopicTemplateService, TopicTemplateService>();
         services.AddTransient<IProductTagService, ProductTagService>();
         services.AddTransient<IAddressService, AddressService>();
@@ -484,6 +486,7 @@ public partial class BaseNopTest
         services.AddTransient<ILanguageModelFactory, LanguageModelFactory>();
         services.AddTransient<ILogModelFactory, LogModelFactory>();
         services.AddTransient<IManufacturerModelFactory, ManufacturerModelFactory>();
+        services.AddTransient<IBrandModelFactory, BrandModelFactory>();
         services.AddTransient<IMeasureModelFactory, MeasureModelFactory>();
         services.AddTransient<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
         services.AddTransient<INewsletterSubscriptionModelFactory, NewsletterSubscriptionModelFactory>();

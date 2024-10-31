@@ -126,6 +126,11 @@ public static partial class AdminWidgetZones
     public static string ManufacturerDetailsButtons => "admin_manufacturer_details_buttons";
     public static string ManufacturerListButtons => "admin_manufacturer_list_buttons";
     public static string ManufacturerTemplateListButtons => "admin_manufacturer_template_list_buttons";
+
+    public static string BrandDetailsBlock => "admin_brand_details_block";
+    public static string BrandDetailsButtons => "admin_brand_details_buttons";
+    public static string BrandListButtons => "admin_brand_list_buttons";
+    public static string BrandTemplateListButtons => "admin_brand_template_list_buttons";
     public static string MeasureListBlock => "admin_measure_list_block";
     public static string MeasureListButtons => "admin_measure_list_buttons";
     public static string MediaSettingsButtons => "admin_media_settings_buttons";

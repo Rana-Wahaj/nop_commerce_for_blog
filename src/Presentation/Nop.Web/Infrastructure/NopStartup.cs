@@ -53,6 +53,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ILanguageModelFactory, LanguageModelFactory>();
         services.AddScoped<ILogModelFactory, LogModelFactory>();
         services.AddScoped<IManufacturerModelFactory, ManufacturerModelFactory>();
+        services.AddScoped<IBrandModelFactory, BrandModelFactory>();
         services.AddScoped<IMeasureModelFactory, MeasureModelFactory>();
         services.AddScoped<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
         services.AddScoped<IMultiFactorAuthenticationMethodModelFactory, MultiFactorAuthenticationMethodModelFactory>();

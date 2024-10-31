@@ -45,7 +45,7 @@ public partial record BrandModel : BaseNopEntityModel, IAclSupportedModel, IDisc
     public string Description { get; set; }
 
     [NopResourceDisplayName("Admin.Catalog.Brands.Fields.BrandsTemplate")]
-    public int ManufacturerTemplateId { get; set; }
+    public int BrandTemplateId { get; set; }
 
     public IList<SelectListItem> AvailableBrandTemplates { get; set; }
 

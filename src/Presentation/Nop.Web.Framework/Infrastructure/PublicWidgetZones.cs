@@ -144,6 +144,14 @@ public static partial class PublicWidgetZones
     public static string ManufacturerDetailsBeforeProductList => "manufacturerdetails_before_product_list";
     public static string ManufacturerDetailsBottom => "manufacturerdetails_bottom";
     public static string ManufacturerDetailsTop => "manufacturerdetails_top";
+
+
+    public static string BrandDetailsAfterFeaturedProducts => "branddetails_after_featured_products";
+    public static string BrandDetailsBeforeFeaturedProducts => "branddetails_before_featured_products";
+    public static string BrandDetailsBeforeFilters => "branddetails_before_filters";
+    public static string BrandDetailsBeforeProductList => "branddetails_before_product_list";
+    public static string BrandDetailsBottom => "branddetails_bottom";
+    public static string BrandDetailsTop => "branddetails_top";
     public static string MobHeaderMenuAfter => "mob_header_menu_after";
     public static string MobHeaderMenuBefore => "mob_header_menu_before";
     public static string NewsItemPageAfterComments => "newsitem_page_after_comments";

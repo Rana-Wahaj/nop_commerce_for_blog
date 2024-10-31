@@ -90,6 +90,7 @@ public static partial class NopLinksDefaults
         /// Gets a URL of the manufacturers docs page
         /// </summary>
         public static string Manufacturers => "https://docs.nopcommerce.com/running-your-store/catalog/manufacturers.html";
+        public static string Brands => "https://docs.nopcommerce.com/running-your-store/catalog/brands.html";
 
         /// <summary>
         /// Gets a URL of the product reviews docs page

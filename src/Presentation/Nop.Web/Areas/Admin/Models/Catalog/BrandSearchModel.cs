@@ -21,15 +21,15 @@ public partial record BrandSearchModel : BaseSearchModel
 
     #region Properties
 
-    [NopResourceDisplayName("Admin.Catalog.BrandS.List.SearchManufacturerName")]
-    public string SearcBrandSName { get; set; }
+    [NopResourceDisplayName("Admin.Catalog.Brands.List.SearchBrandName")]
+    public string SearchBrandName { get; set; }
 
-    [NopResourceDisplayName("Admin.Catalog.BrandS.List.SearchStore")]
+    [NopResourceDisplayName("Admin.Catalog.Brands.List.SearchStore")]
     public int SearchStoreId { get; set; }
 
     public IList<SelectListItem> AvailableStores { get; set; }
 
-    [NopResourceDisplayName("Admin.Catalog.BrandS.List.SearchPublished")]
+    [NopResourceDisplayName("Admin.Catalog.Brands.List.SearchPublished")]
     public int SearchPublishedId { get; set; }
 
     public IList<SelectListItem> AvailablePublishedOptions { get; set; }
